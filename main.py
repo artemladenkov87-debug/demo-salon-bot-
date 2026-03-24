@@ -3,7 +3,7 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from database import get_connection, init_db
-from handlers import start, info, booking
+from handlers import start, info, booking, admin
 import config
 
 logging.basicConfig(level=logging.INFO)
@@ -20,6 +20,7 @@ async def main():
     dp.include_router(start.router)
     dp.include_router(info.router)
     dp.include_router(booking.router)
+    dp.include_router(admin.router)
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
