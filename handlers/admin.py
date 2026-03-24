@@ -7,17 +7,11 @@ from config import ADMIN_ID
 router = Router()
 
 
-def admin_only(func):
-    async def wrapper(message: Message, *args, **kwargs):
-        if message.from_user.id != ADMIN_ID:
-            return
-        return await func(message, *args, **kwargs)
-    return wrapper
-
-
 @router.message(Command("stats"))
-@admin_only
 async def cmd_stats(message: Message):
+    if message.from_user.id != ADMIN_ID:
+        return
+
     async with get_connection() as conn:
         async with conn.execute(
             "SELECT COUNT(*) FROM bookings WHERE status='active'"
@@ -53,8 +47,10 @@ async def cmd_stats(message: Message):
 
 
 @router.message(Command("masters"))
-@admin_only
 async def cmd_masters(message: Message):
+    if message.from_user.id != ADMIN_ID:
+        return
+
     async with get_connection() as conn:
         async with conn.execute(
             "SELECT master, COUNT(*) as cnt FROM bookings WHERE status='active' "
@@ -79,8 +75,10 @@ async def cmd_masters(message: Message):
 
 
 @router.message(Command("days"))
-@admin_only
 async def cmd_days(message: Message):
+    if message.from_user.id != ADMIN_ID:
+        return
+
     async with get_connection() as conn:
         async with conn.execute(
             "SELECT date, COUNT(*) as cnt FROM bookings WHERE status='active' "
@@ -106,8 +104,10 @@ async def cmd_days(message: Message):
 
 
 @router.message(Command("bookings"))
-@admin_only
 async def cmd_bookings(message: Message):
+    if message.from_user.id != ADMIN_ID:
+        return
+
     async with get_connection() as conn:
         async with conn.execute(
             "SELECT date, time_slot, master, service, username FROM bookings "
